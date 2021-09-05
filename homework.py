@@ -60,8 +60,23 @@ class CaloriesCalculator(Calculator):
     }
 
     def get_calories_remained(self):
+<<<<<<< HEAD
         left = self.get_today_remained()
         if 0 < left:
+=======
+        answers = {
+            "allowed": {
+                "prefix": (
+                    "Сегодня можно съесть что-нибудь ещё, "
+                    "но с общей калорийностью не более "
+                ),
+                "suffix": " кКал",
+            },
+            "forbidden": "Хватит есть!",
+        }
+        left = Calculator.get_today_remained(self)
+        if 0 < left < self.limit:
+>>>>>>> d2ad5b179b1db1924713070d30676be8253dc28b
             return (
                 self.answers["allowed"].format(left)
             )
