@@ -11,11 +11,11 @@ class Calculator:
         self.records.append(obj)
 
     def get_today_stats(self):
-        self.today = dt.date.today()
+        today = dt.date.today()
         stat = sum(
             record.amount
             for record in self.records
-            if record.date == self.today
+            if record.date == today
         )
         return stat
 
@@ -24,12 +24,12 @@ class Calculator:
         return remained
 
     def get_week_stats(self):
-        self.today = dt.date.today()
-        week = dt.date.today() - dt.timedelta(days=7)
+        today = dt.date.today()
+        week = today - dt.timedelta(days=7)
         stat_week = sum(
             record.amount
             for record in self.records
-            if week < record.date <= self.today
+            if week < record.date <= today
         )
         return stat_week
 
@@ -61,7 +61,7 @@ class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self):
         left = self.get_today_remained()
-        if 0 < left:
+        if left > 0:
             return (
                 self.answers["allowed"].format(left)
             )
@@ -94,13 +94,12 @@ class CashCalculator(Calculator):
         }
         rate_name, currency_rate = rate_dict[currency]
         cash_sum = round(left / currency_rate, 2)
-        if currency in rate_dict:
-            if 0 < left:
-                return self.answers["forbidden"]["unspent_limit"].format(
-                    cash_sum, rate_name)
-
-            else:
-                debt = abs(cash_sum)
-                return self.answers["forbidden"]["exceeded_limit"].format(
-                    debt, rate_name)
-        return self.answers["ERROR"]
+        if currency not in rate_dict:
+            return self.answers["ERROR"]
+        if left > 0:
+            return self.answers["forbidden"]["unspent_limit"].format(
+                cash_sum, rate_name)
+        debt = abs(cash_sum)
+        return self.answers["forbidden"]["exceeded_limit"].format(
+            debt, rate_name)
+            
