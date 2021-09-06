@@ -102,4 +102,3 @@ class CashCalculator(Calculator):
         debt = abs(cash_sum)
         return self.answers["forbidden"]["exceeded_limit"].format(
             debt, rate_name)
-            
